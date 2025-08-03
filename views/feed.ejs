@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pinterest Feed</title>
+  <link href="/stylesheets/output.css" rel="stylesheet" />
+</head>
+<body class="bg-pink-50 text-gray-800 min-h-screen">
+  <div class="max-w-5xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">Explore Feed</h1>
+      <a href="/profile" class="text-blue-600 hover:underline">Back to Profile</a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <% posts.forEach(post => { %>
+        <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+          
+          <!-- Post Image -->
+          <% if (post.image) { %>
+            <img src="<%= post.image %>" alt="Post image" class="w-full h-48 object-cover rounded-md mb-4" />
+          <% } %>
+
+          <!-- Post Text -->
+          <p class="mb-4 text-gray-900 text-lg"><%= post.postText %></p>
+
+          <!-- User info with DP -->
+          <div class="flex items-center gap-3 mb-3">
+            <img src="<%= post.user.dp && post.user.dp !== '' ? post.user.dp : '/images/default-dp.png' %>" 
+                 alt="User DP" class="w-12 h-12 rounded-full object-cover border" />
+            <div>
+              <p class="font-semibold">@<%= post.user.username %></p>
+            </div>
+          </div>
+
+          <!-- Likes -->
+          <div class="mt-auto flex justify-between items-center">
+            <a href="/like/<%= post._id %>" class="text-red-500 hover:text-red-600 font-semibold">❤️ <%= post.likes.length %></a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

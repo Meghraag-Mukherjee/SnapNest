@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile - <%= user.username %></title>
+  <link href="/stylesheets/output.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+  <div class="max-w-4xl mx-auto p-6">
+    
+    <!-- Top Bar -->
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-3xl font-bold">Welcome, <%= user.fullName %></h1>
+      <div class="space-x-4">
+        <a href="/feed" class="text-blue-600 hover:underline">Go to Feed</a>
+        <a href="/logout" class="text-red-500 hover:underline">Logout</a>
+      </div>
+    </div>
+
+    <!-- Profile Info -->
+    <div class="flex gap-6 items-center mb-6">
+      <img src="<%= user.dp && user.dp !== '' ? user.dp : '/images/default-dp.png' %>" 
+           class="w-24 h-24 rounded-full object-cover border" />
+      <div>
+        <p class="font-semibold text-lg">@<%= user.username %></p>
+        <p>Email: <%= user.email %></p>
+        <p>Total Likes: <%= totalLikes %></p>
+        <!-- DP Upload Form with two buttons -->
+        <form action="/upload-dp" method="POST" enctype="multipart/form-data" class="mt-2 space-y-2 flex items-center gap-3">
+          <!-- Hidden file input -->
+          <input type="file" id="dpInput" name="dp" class="hidden" required />
+
+          <!-- Button to trigger file input -->
+          <button type="button" id="selectBtn" 
+            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition">
+            Select DP
+          </button>
+
+          <!-- Show selected file name -->
+          <span id="fileName" class="text-gray-700"></span>
+
+          <!-- Submit button -->
+          <button type="submit" 
+            class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition">
+            Upload DP
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Create Post -->
+    <form action="/create-post" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow mb-6">
+      <textarea name="postText" class="w-full border p-2 mb-2 rounded" placeholder="Write something..." required></textarea>
+      <input type="file" name="image" />
+      <button class="bg-green-600 text-white px-4 py-2 rounded mt-2 hover:bg-green-700 transition">Post</button>
+    </form>
+
+    <!-- My Posts -->
+    <h2 class="text-xl font-semibold mb-3">My Posts</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <% posts.forEach(post => { %>
+        <div class="bg-white p-4 rounded shadow relative">
+          <p class="mb-2"><%= post.postText %></p>
+          <% if (post.image) { %>
+            <img src="<%= post.image %>" class="w-full h-48 object-cover mb-2 rounded" />
+          <% } %>
+          <div class="flex justify-between items-center">
+            <a href="/like/<%= post._id %>" class="text-red-500 hover:underline">❤️ <%= post.likes.length %></a>
+            <a href="/delete/<%= post._id %>" class="text-gray-500 hover:text-red-600 hover:underline">🗑️ Delete</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <script>
+    const dpInput = document.getElementById('dpInput');
+    const selectBtn = document.getElementById('selectBtn');
+    const fileName = document.getElementById('fileName');
+
+    selectBtn.addEventListener('click', () => dpInput.click());
+
+    dpInput.addEventListener('change', () => {
+      if (dpInput.files.length > 0) {
+        fileName.textContent = dpInput.files[0].name;
+      } else {
+        fileName.textContent = '';
+      }
+    });
+  </script>
+</body>
+</html>
