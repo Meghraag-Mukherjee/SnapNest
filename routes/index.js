@@ -24,6 +24,14 @@ passport.use(new LocalStrategy(userModel.authenticate()));
 passport.serializeUser(userModel.serializeUser());
 passport.deserializeUser(userModel.deserializeUser());
 
+const fs = require('fs');
+const uploadPath = path.join(__dirname, '../public/uploads');
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
+
+
 // Multer Setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "public/uploads"),
